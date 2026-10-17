@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Configure localhost and facebook.com mappings while preserving other hosts.
+hosts=$(awk '
+{
+    line = $1
+    count = 0
+    for (i = 2; i <= NF; i++) {
+        if ($i ~ /^#/) {
+            for (; i <= NF; i++) line = line " " $i
+            break
+        }
+        if ($i != "localhost" && $i != "facebook.com") {
+            line = line " " $i
+            count++
+        }
+    }
+    if ($0 ~ /^[[:space:]]*(#|$)/) print
+    else if (count > 0) print line
+}' /etc/hosts) || exit 1
+printf '%s\n127.0.0.2 localhost\n8.8.8.8 facebook.com\n' "$hosts" > /etc/hosts
