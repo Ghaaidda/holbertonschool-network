@@ -1,7 +1,3 @@
 #!/usr/bin/env bash
 # list listening sockets
-if command -v netstat &> /dev/null; then
-    netstat -lpn 2>/dev/null
-else
-    ss -lpn 2>/dev/null
-fi
+netstat -l -p
